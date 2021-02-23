@@ -12,6 +12,10 @@ public class GasMileageCalculatorPage {
         PageFactory.initElements(Driver.getDriver(), this);
     }
 
+
+    @FindBy(xpath = "//a[.='US Units']")
+    public WebElement usUnits;
+
     @FindBy(id = "uscodreading")
     public WebElement inputCurrentOdo;
 

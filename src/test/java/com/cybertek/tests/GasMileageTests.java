@@ -30,6 +30,9 @@ public class GasMileageTests {
 
         Driver.getDriver().get("https://www.calculator.net/gas-mileage-calculator.html");
 
+        // go to US Unit view:
+        gasMileageCalculatorPage.usUnits.click();
+
         //Get the path from Content Root
         String path = "src/test/resources/testData/GasMileageTestData.xlsx";
 
