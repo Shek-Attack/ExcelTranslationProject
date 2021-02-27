@@ -26,12 +26,12 @@ Feature: Wikipedia search feature
     Then User sees "<expectedTitle>" is in the wiki title
 
     Examples: search terms we are going to search in wikipedia
-      | searchValue  | expectedMainHeader | expectedTitle |
-      | Steve Jobs   | Steve Jobs         | Steve Jobs    |
-      | Kuzzat Altay | Kuzzat Altay       | Kuzzat Altay  |
-      | Kobe Bryant  | Kobe Bryant        | Kobe Bryant   |
-      | Elon Musk    | Elon Musk          | Elon Musk     |
-      | Bill Gates   | Bill Gates         | Bill Gates    |
-      | Chuck Norris | Chuck Norris       | Chuck Norris  |
-      | Marie Curie  | Marie Curie        | Marie Curie   |
+      | searchValue        | expectedMainHeader | expectedTitle      |
+      | Steve Jobs         | Steve Jobs         | Steve Jobs         |
+      | Maryam Mirzakhani  | Maryam Mirzakhani  | Maryam Mirzakhani  |
+      | Mahmud al-Kashgari | Mahmud al-Kashgari | Mahmud al-Kashgari |
+      | Elon Musk          | Elon Musk          | Elon Musk          |
+      | Bill Gates         | Bill Gates         | Bill Gates         |
+      | Muhammad Ali       | Muhammad Ali       | Muhammad Ali       |
+      | Marie Curie        | Marie Curie        | Marie Curie        |
 

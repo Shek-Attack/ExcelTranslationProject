@@ -26,7 +26,7 @@ public class Etsy_StepDefinitions {
         String actual = Driver.getDriver().getTitle();
         String expected = "Etsy - Shop for handmade, vintage, custom, and unique gifts for everyone";
 
-        Assert.assertTrue(actual.equals(expected));
+        Assert.assertEquals(actual, expected);
 
     }
 
@@ -41,9 +41,8 @@ public class Etsy_StepDefinitions {
     public void userShouldSeeInTheEtsyTitle(String arg0) {
 
         String actual = Driver.getDriver().getTitle();
-        String expected = arg0+" | Etsy";
 
-        Assert.assertTrue(actual.equals(expected));
+        Assert.assertTrue(actual.contains(arg0));
 
     }
 }
