@@ -3,16 +3,28 @@ package com.cybertek.translation;
 import com.cybertek.pages.TranslationTestPage;
 import com.cybertek.utilities.BrowserUtils;
 import com.cybertek.utilities.Driver;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.bouncycastle.util.Arrays;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static org.bouncycastle.util.Arrays.*;
+
+// more than couple of lines of excel table or more than 3900 chars,
+// google translate refuses to do the translation
+// so this attempt has only demo value, nothing more, unfortunately.
 
 public class TranslationShort {
 
@@ -54,62 +66,58 @@ public class TranslationShort {
 
         // rows:
 
-        String targetWord;
-        for (int j = 0; j <6; j++) {
+        String translation;
+        for (int j = 0; j <rowNum; j++) {
             System.out.print("");
 
-            // go to google translate from "source" to "target":
-            Driver.getDriver().get("https://www.google.com/search?q="+source+"+to+"+target[0]+"+translate&oq=chinese+to+english&aqs=chrome.1.69i57j35i39j0i512l8.9361j0j15&sourceid=chrome&ie=UTF-8");
+            Row row = sheetTarget.getRow(j);
 
             // columns of a row:
-            for (int i = 0; i <colNum; i++) {
+            for (int i = 0; i < colNum; i++) {
+
+                // go to google translate from "source" to "target":
+                //Driver.getDriver().get("https://www.google.com/search?q=" + source + "+to+" + target[0] + "+translate&oq=chinese+to+english&aqs=chrome.1.69i57j35i39j0i512l8.9361j0j15&sourceid=chrome&ie=UTF-8");
+                Driver.getDriver().get("https://translate.google.ca/?hl=en&tab=jT&sl=auto&tl=en&op=translate");
+
 
                 // write into the sourceTextArea
 
-                translationTestPage.sourceTextArea.sendKeys(Keys.CLEAR);
-                BrowserUtils.waitForVisibility(translationTestPage.sourceTextArea,30);
-                translationTestPage.sourceTextArea.sendKeys(sheetSource.getRow(j).getCell(i)+"|\n", Keys.ENTER);
-                System.out.println("sheetSource.getRow("+j+").getCell("+i+") = " + sheetSource.getRow(j).getCell(i));
+                //translationTestPage.sourceTextArea.sendKeys(Keys.CLEAR);
+                BrowserUtils.waitForVisibility(translationTestPage.sourceTextArea, 30);
+                translationTestPage.sourceTextArea.sendKeys(sheetSource.getRow(j).getCell(i) + "\n", Keys.ENTER);
+                System.out.println("sheetSource.getRow(" + j + ").getCell(" + i + ") = " + sheetSource.getRow(j).getCell(i));
                 // source writing and reading is complete
 
-                //read the translation from targetTextArea
+
+                //read the translation from translationTextArea
                 // wait for translation
-                BrowserUtils.waitForVisibility(translationTestPage.targetTextArea, 30);
+                BrowserUtils.waitForClickability(translationTestPage.targetTextArea, 60);
 
-            }
-            System.out.println(" ================== Row("+j+") input is provided as source text =============== ");
-            BrowserUtils.waitForVisibility(translationTestPage.targetTextArea, 30);
-            targetWord=translationTestPage.targetTextArea.getText();
-            System.out.println(targetWord);
+                translation = translationTestPage.targetTextArea.getText();
 
-           // translation is done as one row string, extract the cell values:
+                System.out.println("translation = " + translation);
+                // translation is done as one cell string:
+
+
                 // problem is below code:
+                // how to write translation into each cell?
 
-                String[] entryRowCells=targetWord.split("\\|\n");
-                String entryRowArray=Arrays.toString(entryRowCells);
-            System.out.println("entryRowArray = " + entryRowArray);
+                //Cell cell = row.createCell(i);
+                //cell.setCellValue(translation);
+               // row.getCell(i).setCellValue(translation);
 
-
-            for (int i = 0; i <entryRowCells.length; i++) {
-                    XSSFCell cell = sheetTarget.getRow(j).createCell(12);
-
-                    cell.setCellValue(Arrays.toString(entryRowCells));
-                    System.out.println("Cell["+i+"] = " + entryRowCells[i]);
-
-                }
-
+               // System.out.println("sheetTarget.getRow(j).getCell(i) = " + sheetTarget.getRow(j).getCell(i));
 
             }
+            System.out.println(" ================== Row(" + j + ") input is provided as source text =============== ");
 
-        //System.out.println(" ");
-
-
-        FileOutputStream fos = new FileOutputStream(pathTarget);
-        workbookTarget.write(fos);
-        fos.close();
+            FileOutputStream fos = new FileOutputStream(pathTarget);
+            workbookTarget.write(fos);
+            fos.close();
 
 
-        //Driver.closeDriver();
+            //Driver.closeDriver();
+        }
 
 
     }
