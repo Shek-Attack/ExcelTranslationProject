@@ -1,4 +1,4 @@
-package com.cybertek.utilities;
+package com.translation.utilities;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -1,26 +1,18 @@
-package com.cybertek.translation;
+package com.translation.tests;
 
-import com.cybertek.pages.TranslationTestPage;
-import com.cybertek.utilities.BrowserUtils;
-import com.cybertek.utilities.Driver;
-import org.apache.poi.ss.usermodel.Cell;
+import com.translation.pages.TranslationTestPage;
+import com.translation.utilities.BrowserUtils;
+import com.translation.utilities.Driver;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.bouncycastle.util.Arrays;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
-import static org.bouncycastle.util.Arrays.*;
 
 // more than couple of lines of excel table or more than 3900 chars,
 // google translate refuses to do the translation
@@ -59,43 +51,43 @@ public class TranslationShort {
         String pathTarget = "TargetSample.xlsx";
         FileInputStream fsTarget = new FileInputStream(pathTarget);
         //Creating a workbook
-        XSSFWorkbook workbookTarget = new XSSFWorkbook(fsTarget);
-        XSSFSheet sheetTarget = workbookTarget.getSheetAt(0);
+        XSSFWorkbook workbookW = new XSSFWorkbook(fsTarget);
+        XSSFSheet sheetW = workbookW.getSheetAt(0);
 
 
 
         // rows:
 
-        String translation;
-        for (int j = 0; j <rowNum; j++) {
+        for (int j = 0; j <2; j++) {
             System.out.print("");
 
-            Row row = sheetTarget.getRow(j);
+            Row rowR = sheetSource.getRow(j);
+
+            // create a row to write to the sheet
+            XSSFRow rowW= sheetW.createRow(j);
 
             // columns of a row:
             for (int i = 0; i < colNum; i++) {
 
-                // go to google translate from "source" to "target":
+                // go to DeepL translate from "source" to "target":
                 //Driver.getDriver().get("https://www.google.com/search?q=" + source + "+to+" + target[0] + "+translate&oq=chinese+to+english&aqs=chrome.1.69i57j35i39j0i512l8.9361j0j15&sourceid=chrome&ie=UTF-8");
-                Driver.getDriver().get("https://translate.google.ca/?hl=en&tab=jT&sl=auto&tl=en&op=translate");
-
+                Driver.getDriver().get("https://www.deepl.com/translator#zh/en/");
 
                 // write into the sourceTextArea
-
-                //translationTestPage.sourceTextArea.sendKeys(Keys.CLEAR);
-                BrowserUtils.waitForVisibility(translationTestPage.sourceTextArea, 30);
-                translationTestPage.sourceTextArea.sendKeys(sheetSource.getRow(j).getCell(i) + "\n", Keys.ENTER);
-                System.out.println("sheetSource.getRow(" + j + ").getCell(" + i + ") = " + sheetSource.getRow(j).getCell(i));
+                String sourceCell=sheetSource.getRow(j).getCell(i).toString();
+                BrowserUtils.wait(1+sourceCell.length()/1000);
+                translationTestPage.sourceTextArea.sendKeys(sourceCell + "  ", Keys.ENTER);
+                //System.out.println("sheetSource.getRow(" + j + ").getCell(" + i + ") = " + sheetSource.getRow(j).getCell(i));
+                System.out.println("sheetSource.getRow(" + j + ").getCell(" + i + ") = " + sourceCell);
                 // source writing and reading is complete
 
 
-                //read the translation from translationTextArea
+                //get the translation from translationTextArea
                 // wait for translation
-                BrowserUtils.waitForClickability(translationTestPage.targetTextArea, 60);
+                BrowserUtils.wait(1+sourceCell.length()/500);
+                String transCell = translationTestPage.getTranslation();
+                System.out.println("translatedCell = " + transCell);
 
-                translation = translationTestPage.targetTextArea.getText();
-
-                System.out.println("translation = " + translation);
                 // translation is done as one cell string:
 
 
@@ -109,10 +101,10 @@ public class TranslationShort {
                // System.out.println("sheetTarget.getRow(j).getCell(i) = " + sheetTarget.getRow(j).getCell(i));
 
             }
-            System.out.println(" ================== Row(" + j + ") input is provided as source text =============== ");
+            System.out.println(" ================== source row(" + j + ") read in ends =============== ");
 
             FileOutputStream fos = new FileOutputStream(pathTarget);
-            workbookTarget.write(fos);
+            workbookW.write(fos);
             fos.close();
 
 

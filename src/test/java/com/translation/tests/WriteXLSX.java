@@ -1,18 +1,17 @@
-package com.cybertek.translation;
+package com.translation.tests;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class WriteXLSX {
     public static void main(String[] args) throws IOException {
-        FileInputStream fis = new FileInputStream("D:\\xlsx\\trans.xlsx");
+        FileInputStream fis = new FileInputStream("D:\\xlsx\\Trans.xlsx");
         XSSFWorkbook workbook = new XSSFWorkbook (fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
         //Create First Row
@@ -40,9 +39,9 @@ public class WriteXLSX {
         XSSFCell r3c3 = row3.createCell(2);
         r3c3.setCellValue("25");
         fis.close();
-        FileOutputStream fos =new FileOutputStream("D:\\xlsx\\trans.xlsx");
+        FileOutputStream fos =new FileOutputStream("D:\\xlsx\\Trans.xlsx");
         workbook.write(fos);
         fos.close();
-        System.out.println("Done: written into file trans.xlsx");
+        System.out.println("Done: written into file Trans.xlsx");
     }
 }

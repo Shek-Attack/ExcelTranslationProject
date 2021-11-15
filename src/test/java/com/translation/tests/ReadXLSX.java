@@ -1,4 +1,4 @@
-package com.cybertek.translation;
+package com.translation.tests;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -12,7 +12,7 @@ import java.util.Iterator;
 
 public class ReadXLSX {
     public static void main(String[] args) throws IOException {
-        FileInputStream fisReading = new FileInputStream("D:\\xlsx\\source.xlsx");
+        FileInputStream fisReading = new FileInputStream("D:\\xlsx\\SourceSample.xlsx");
         XSSFWorkbook workbook = new XSSFWorkbook (fisReading);
         XSSFSheet sheet = workbook.getSheetAt(0);
 
@@ -24,10 +24,11 @@ public class ReadXLSX {
             Iterator<Cell> cite = row.cellIterator();
             while(cite.hasNext()){
                 XSSFCell c = (XSSFCell) cite.next();
-                System.out.print(c.toString() +"  ");
+                System.out.print(c.toString() +" || ");
             }
             System.out.println();// ending of a row
         } //ending of all rows
+
 
         fisReading.close();
 

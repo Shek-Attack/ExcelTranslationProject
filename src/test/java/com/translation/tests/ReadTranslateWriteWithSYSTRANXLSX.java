@@ -1,8 +1,8 @@
-package com.cybertek.translation;
+package com.translation.tests;
 
-import com.cybertek.pages.TranslationTestPage;
-import com.cybertek.utilities.BrowserUtils;
-import com.cybertek.utilities.Driver;
+import com.translation.pages.TranslationTestPage;
+import com.translation.utilities.BrowserUtils;
+import com.translation.utilities.Driver;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -27,16 +27,16 @@ import java.io.IOException;
 
 public class ReadTranslateWriteWithSYSTRANXLSX {
 
-    //int rowNums= sheetR.getLastRowNum(); // for real job
-    int rowNums=20; //0,1
-    int colNums=12; // 0,1,2, ...,11
+    //WARNING: make sure you have commented and
+    // uncommented correct Elements in TranslationTestPage before running the test!!!
 
-    public String[][] cell2W=new String[rowNums+1][colNums];
+
+    //public String[][] cell2W=new String[rowNums+1][colNums];
     TranslationTestPage translationTestPage=new TranslationTestPage();
 
-    private static final File sourceFile= new File("D:\\xlsx\\SourceSample.xlsx");
-    //String sourceFile = "SourceSample.xlsx"; // if the file is directly under the project
-    private static final File transFile= new File("D:\\xlsx\\Trans2.xlsx");
+    private static final File sourceFile= new File("D:\\xlsx\\SourceSampleForTesting.xlsx"); // read from
+    //String sourceFile = "SourceSampleTable.xlsx"; // if the file is directly under the project
+    private static final File transFile= new File("D:\\xlsx\\Trans2.xlsx"); // write into
 
     @Test
     public void translationTest() throws IOException {
@@ -50,6 +50,10 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
         FileInputStream fisWriting = new FileInputStream(transFile);
         Workbook workbookW = new XSSFWorkbook (fisWriting);
         Sheet sheetW = workbookW.getSheetAt(0);
+
+        //int rowNums= sheetR.getLastRowNum(); // for real job
+        int rowNums=3; //0,1
+        int colNums=12; // 0,1,2, ...,11
 
         //reading from cells using for loop:
         //int rowNums= sheetR.getLastRowNum();
@@ -67,7 +71,15 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
 
                 // get cell from the row
                 XSSFCell cellR=rowR.getCell(j);// read/get content from cell(j)
-                String cellRContent=cellR.toString();
+                String cellRContent="";
+                // row 5 is telephone number: we find with experiment that
+                // cellR.getRawValue() get the numeric values as numeric and
+                // if source cell contains "-", we should keep it as "-": otherwise tow digit numbers show up.
+                if(i>0&&j==5){
+                     cellRContent=(!cellR.toString().contains("-"))?cellR.getRawValue():"-";
+                }
+                else {cellRContent=cellR.toString();}
+
                 System.out.println("cellR("+i+","+j+") = " + cellRContent); // see what is there
 
                 //translation begins here==============================
@@ -81,7 +93,7 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
                 //System.out.println("sourceList.get("+j+") = " + sourceList.get(j));
 
                 //wait just long enough depending on the length of the last cell.
-                int waitTimeForLongChar2Translate=3+(cellRContent.length()/100); //wait 1 sec for 1k chars 2 translate
+                int waitTimeForLongChar2Translate=1+(cellRContent.length()/80); //wait 1 sec for 1k chars 2 translate
                 //System.out.println("waitTimeForLongChar2Translate = " + waitTimeForLongChar2Translate);
                 BrowserUtils.wait(waitTimeForLongChar2Translate);
 
@@ -89,14 +101,21 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
                 translation[j]= translationTestPage.transTextArea.getText();
                 System.out.println("cellW("+i+","+j+")trans= " + translation[j]);
                 String cell2WContent= translation[j];
-                cell2W[i][j]=cell2WContent;
-                System.out.println("cell2W["+i+"]["+j+"] = " + cell2W[i][j]);
+                //cell2W[i][j]=cell2WContent;
+                //System.out.println("cell2W["+i+"]["+j+"] = " + cell2W[i][j]);
 
                 //create a cell to write the translation into:
                 Cell cellW= rowW.createCell(j);
+
                 //assign a value to each cell[i,j]:
-                //cellW.setCellValue("row"+i+"cell"+j);
-                cellW.setCellValue(cell2WContent);
+
+                // email and phone numbers no need to be translated:
+                if(i>0&&(j==5)){
+                    cellW.setCellValue(cellRContent);
+                }else{
+                    cellW.setCellValue(cell2WContent);
+                }
+
 
 
             }// End of column j in row i:
