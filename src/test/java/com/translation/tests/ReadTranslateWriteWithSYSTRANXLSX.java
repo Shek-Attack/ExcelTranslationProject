@@ -119,7 +119,6 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
                 }
 
 
-
             }// End of column j in row i:
 
 
