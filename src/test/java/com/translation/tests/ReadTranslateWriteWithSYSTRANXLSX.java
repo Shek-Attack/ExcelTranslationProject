@@ -110,6 +110,8 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
                 //assign a value to each cell[i,j]:
 
                 // email and phone numbers no need to be translated:
+                // only column 5 content need to be kept as original,
+                // the rest is String for writing.
                 if(i>0&&(j==5)){
                     cellW.setCellValue(cellRContent);
                 }else{
