@@ -1,1 +1,2 @@
 # ExcelTranslationProject
+The program reads from an Excel file in Chinese and translate with SYSTRAN/Google/DeepL translator into English and write the translation into an excel file. Currently, the Chinese source file is 12 columns and can be 1000 rows. Some cells can be empty, have numeric values or have upto 1000 Chinese letters which cannot be translated with Google (which allows upto 430 Chinese letters), but with SYSTRAN (which allows upto 2000 Chinese letters) can be translated and more accurate than Google translate or Google Sheet Translation.  
