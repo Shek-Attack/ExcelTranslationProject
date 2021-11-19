@@ -10,13 +10,13 @@ public class TranslationTestPage {
     public TranslationTestPage(){PageFactory.initElements(Driver.getDriver(), this);}
 
     //@FindBy(xpath = "(//textarea)[1]") // DeepL
-    //@FindBy(xpath = " //textarea") // Google Translate
-    @FindBy(xpath = "//textarea") // SYSTRAN text-area
+    @FindBy(xpath = " //textarea") // Google Translate
+    //@FindBy(xpath = "//textarea") // SYSTRAN text-area
     public WebElement sourceTextArea;
 
     //@FindBy(xpath = "(//textarea)[2]") // DeepL
-    @FindBy(xpath = "//div[@id='translateContent']") // SYSTRAN translated text-area
-    //@FindBy(xpath = " //pre[@id='tw-target-text']") // Google Translate
+    //@FindBy(xpath = "//div[@id='translateContent']") // SYSTRAN translated text-area
+    @FindBy(xpath = " //pre[@id='tw-target-text']") // Google Translate
     //@FindBy(xpath = "//span[@lang='ug']") // Google Translate UYGHUR
     public WebElement transTextArea;
 

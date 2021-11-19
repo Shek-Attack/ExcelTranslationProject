@@ -35,7 +35,7 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
     TranslationTestPage translationTestPage=new TranslationTestPage();
 
     private static final File sourceFile= new File("D:\\xlsx\\SourceSampleForTesting.xlsx"); // read from
-    //String sourceFile = "SourceSampleTable.xlsx"; // if the file is directly under the project
+    //String sourceFile = "SourceSampleForTesting.xlsx"; // if the file is directly under the project
     private static final File transFile= new File("D:\\xlsx\\Trans2.xlsx"); // write into
 
     @Test
@@ -72,7 +72,7 @@ public class ReadTranslateWriteWithSYSTRANXLSX {
                 // get cell from the row
                 XSSFCell cellR=rowR.getCell(j);// read/get content from cell(j)
                 String cellRContent="";
-                // row 5 is telephone number: we find with experiment that
+                // column 5 is telephone number: we find with experiment that
                 // cellR.getRawValue() get the numeric values as numeric and
                 // if source cell contains "-", we should keep it as "-": otherwise tow digit numbers show up.
                 if(i>0&&j==5){
