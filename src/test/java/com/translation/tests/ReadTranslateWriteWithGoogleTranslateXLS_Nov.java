@@ -1,6 +1,6 @@
 package com.translation.tests;
 
-import com.translation.pages.TranslationTestPage;
+import com.translation.pages.Google_TranslationTestPage;
 import com.translation.utilities.BrowserUtils;
 import com.translation.utilities.Driver;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -28,17 +28,19 @@ import java.io.IOException;
 // DeepL has char limit of 5000, as good as SYSTRAN, but extracting translated text is problematic. Good enough for manual translation.
 // Google Translate is 4 times faster than SYSTRAN Translate.
 
-public class ReadTranslateWriteWithGoogleTranslateXLSX_Nov {
+//Translates xls files, not xlsx files!!!
+
+public class ReadTranslateWriteWithGoogleTranslateXLS_Nov {
 
     //WARNING: make sure you have commented and
     // uncommented correct Elements in TranslationTestPage before running the test!!!
     // check also colNums. It has to be correct.
 
-    TranslationTestPage translationTestPage=new TranslationTestPage();
+    Google_TranslationTestPage translationTestPage=new Google_TranslationTestPage();
 
-    private static final File sourceFile= new File("D:\\xlsx\\SourceSampleForTesting.xlsx"); // read from
+    private static final File sourceFile= new File("D:\\xlsx\\Nov15_2021\\ChineseDocs\\Altay.xls"); // read from
     //String sourceFile = "SourceSampleForTesting.xlsx"; // if the file is directly under the project
-    private static final File transFile= new File("D:\\xlsx\\Trans.xlsx"); // write into
+    private static final File transFile= new File("D:\\xlsx\\Nov15_2021\\Trans4.xls"); // write into
 
 
     // translate from
@@ -62,11 +64,13 @@ public class ReadTranslateWriteWithGoogleTranslateXLSX_Nov {
 
 
         // row numbers of the sheet:
-        int rowNums= sheetR.getLastRowNum(); // for real job
-        //int rowNums=1; //0,1, ... // for testing only
+        //int rowNums= sheetR.getLastRowNum(); // for real job
+        int rowNums=3; //0,1, ... // for testing only
+        System.out.println("rowNums = " + rowNums);
 
         // column numbers of the sheet:
         int colNums=sheetR.getRow(0).getLastCellNum(); // 0,1,2, ...,9 // sheet colNums=10 :::
+        System.out.println("colNums = " + colNums);
 
         // if the code does not run after one row, check the column number in the xls file
 
@@ -77,9 +81,8 @@ public class ReadTranslateWriteWithGoogleTranslateXLSX_Nov {
             Row rowW=sheetW.createRow(i);
 
             // go to DeppL/Google  to translate from "source" to "target":
-           Driver.getDriver().get("https://www.google.com/search?q=" + source + "+to+" + target[0] + "+translate&oq=chinese+to+english&aqs=chrome.1.69i57j35i39j0i512l8.9361j0j15&sourceid=chrome&ie=UTF-8");
+           Driver.getDriver().get("https://www.google.com/search?q=" + source + "+to+" + target[4] + "+translate&oq=chinese+to+english&aqs=chrome.1.69i57j35i39j0i512l8.9361j0j15&sourceid=chrome&ie=UTF-8");
            //Driver.getDriver().get("https://translate.google.ca/?sl=auto&tl=ug");
-
 
 
             for (int j = 0; j < colNums; j++) {
@@ -127,9 +130,7 @@ public class ReadTranslateWriteWithGoogleTranslateXLSX_Nov {
                         cellW.setCellValue(cell2WContent);
                     }
 
-
             }// End of column j in row i:
-
 
             //translation ends here =================================
 
@@ -142,12 +143,8 @@ public class ReadTranslateWriteWithGoogleTranslateXLSX_Nov {
             System.out.println("Done: values are written in "+transFile);
 
         fisReading.close();
-
         Driver.closeDriver();
 
-
     } // End of Test
-
-
 
 } // end of class
