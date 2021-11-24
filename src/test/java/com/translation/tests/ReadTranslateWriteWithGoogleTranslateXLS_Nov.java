@@ -81,7 +81,7 @@ public class ReadTranslateWriteWithGoogleTranslateXLS_Nov {
             Row rowW=sheetW.createRow(i);
 
             // go to DeppL/Google  to translate from "source" to "target":
-           Driver.getDriver().get("https://www.google.com/search?q=" + source + "+to+" + target[4] + "+translate&oq=chinese+to+english&aqs=chrome.1.69i57j35i39j0i512l8.9361j0j15&sourceid=chrome&ie=UTF-8");
+           Driver.getDriver().get("https://www.google.com/search?q=" + source + "+to+" + target[3] + "+translate&oq=chinese+to+english&aqs=chrome.1.69i57j35i39j0i512l8.9361j0j15&sourceid=chrome&ie=UTF-8");
            //Driver.getDriver().get("https://translate.google.ca/?sl=auto&tl=ug");
 
 
