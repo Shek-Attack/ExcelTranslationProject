@@ -5,9 +5,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class TranslationTestPage {
+public class Google_TranslationTestPage {
 
-    public TranslationTestPage(){PageFactory.initElements(Driver.getDriver(), this);}
+    public Google_TranslationTestPage(){PageFactory.initElements(Driver.getDriver(), this);}
 
     //@FindBy(xpath = "(//textarea)[1]") // DeepL
     @FindBy(xpath = " //textarea") // Google Translate

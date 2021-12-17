@@ -74,13 +74,7 @@ public class BrowserUtils {
         WebDriverWait wait = new WebDriverWait(com.translation.utilities.Driver.getDriver(), timeToWaitInSec);
         return wait.until(ExpectedConditions.visibilityOf(element));
     }
-    /*
-    public static WebElement waitForVisibility(boolean locator, int timeout) {
-        WebDriverWait wait = new WebDriverWait(com.cybertek.utilities.Driver.getDriver(), timeout);
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
 
-     */
     public static WebElement waitForClickability(WebElement element, int timeout) {
         WebDriverWait wait = new WebDriverWait(com.translation.utilities.Driver.getDriver(), timeout);
         return wait.until(ExpectedConditions.elementToBeClickable(element));
