@@ -34,13 +34,17 @@ import java.io.IOException;
  * divide the cell which has more than 400 Chinese words;
  * translate each small part and then combine them into one before writing into translation.
  * Ex: 3570 Chinese words:  1+(3570/400)=1+8=9, divided into 9 sub cells and then merged into one.
+ *
+ * Option III: due to its great quality, it is better go ahead with SYSTRANS.
+ *
+ * Since Google is not that great in terms of quality, the Option II is not followed.
  */
-public class ChoosingServiceBySizeTranslationXLS {
+public class ChoosingServiceBySizeGoogleSYSTRANSTranslationXLS {
 
     //source and translation files:
     public static final File sourceFile= new File("D:\\xlsx\\SourceSampleForTesting.xls"); // read from
     //String sourceFile = "SourceSampleForTesting.xlsx"; // if the file is directly under the project
-    private static final File transFile= new File("D:\\xlsx\\Nov15_2021\\Trans4.xls"); // write into
+    private static final File transFile= new File("D:\\xlsx\\Nov15_2021\\Trans5.xls"); // write into
 
 
     // translate from
@@ -49,7 +53,6 @@ public class ChoosingServiceBySizeTranslationXLS {
     static String[] target={"english", "german", "french", "russian", "turkish", "japanese", "arabic", "uyghur"};
 
     static Google_TranslationTestPage googleTranslationTestPage=new Google_TranslationTestPage();
-    static DeepL_TranslationTestPage deepLTranslationTestPage=new DeepL_TranslationTestPage();
     static SYSTRAN_TranslationTestPage systran_translationTestPage=new SYSTRAN_TranslationTestPage();
 
     public static void main(String[] args) throws IOException {
@@ -67,8 +70,8 @@ public class ChoosingServiceBySizeTranslationXLS {
         Sheet sheetW = workbookW.getSheetAt(0);
 
         // row numbers of the sheet:
-        //int rowNums= sheetR.getLastRowNum(); // for real job
-        int rowNums=3; //0,1, ... // for testing only
+        int rowNums= sheetR.getLastRowNum(); // for real job
+        //int rowNums=1; //0,1, ... // for testing only
         System.out.println("rowNums = " + rowNums);
 
         // column numbers of the sheet:
@@ -88,10 +91,18 @@ public class ChoosingServiceBySizeTranslationXLS {
 
                 // get cell from the row
                 HSSFCell cellR = rowR.getCell(j);// read/get content from cell(j)
-                String cellRContent = cellR.toString();
+
+
+                // column 5 reading should be different!!!!!!!!!!!
+                /**
+                 * column 5 reading should be different!!!!!!!!!!!
+                 */
+
+                String cellRContent = cellR.toString(); // column 5 reading should be different!!!!!!!!!!!
                 int cellLength=cellRContent.length();
                 System.out.println("cellR(" + i + "," + j + ") = " + cellRContent); // see what is there
-                System.out.println("cellR(" + i + "," + j + ") " +" Content.length() = " + cellRContent.length());
+                //System.out.println("cellR(" + i + "," + j + ") :rowR.getCell(j) = " + rowR.getCell(j)); // same to the above line
+                //System.out.println("cellR(" + i + "," + j + ") " +" Content.length() = " + cellRContent.length());
                 // source reading is complete
 
                 int waitTimeForLongChar2Translate=1;
@@ -106,23 +117,22 @@ public class ChoosingServiceBySizeTranslationXLS {
 
                     //wait just long enough depending on the length of the last cell.
                     waitTimeForLongChar2Translate = 1 + cellLength/100; //wait 1 sec for 100 chars 2 translate
-                    //System.out.println("waitTimeForLongChar2Translate = " + waitTimeForLongChar2Translate);
                     BrowserUtils.wait(waitTimeForLongChar2Translate);
 
                     //read the translation from targetTextArea
-                    translation[j] = googleTranslationTestPage.transTextArea.getText();
+                    translation[j] = googleTranslationTestPage.getTranslation();
 
                 }else{
                     // go to DeepL translate
                     Driver.getDriver().get("https://translate.systran.net/?source=zh&target=en");
 
-                    System.out.println("=============Cell [" + i + ", " + j + "] has more than 425 Chinese chars=================");
+                    System.out.println("=============Cell [" + i + ", " + j + "] has " + cellLength + " Chinese chars=================");
                     //translation begins here==============================
-                    systran_translationTestPage.sourceTextArea.clear(); // crucial: if missing clear, the first element shows up in the second element and so the last contains everything before.
+                    systran_translationTestPage.sourceTextArea.clear(); // crucial: if missing clear(), the first element shows up in the second element and so the last contains everything before.
                     systran_translationTestPage.sourceTextArea.sendKeys(cellRContent + "", Keys.ENTER);
 
                     //wait just long enough depending on the length of the last cell.
-                    waitTimeForLongChar2Translate = 10 + (cellLength/100); //wait 1 sec for 100 chars 2 translate
+                    waitTimeForLongChar2Translate = 5 + (cellLength/100); //wait 1 sec for 100 chars 2 translate
                     //System.out.println("waitTimeForLongChar2Translate = " + waitTimeForLongChar2Translate);
                     BrowserUtils.wait(waitTimeForLongChar2Translate);
                     BrowserUtils.waitForVisibility(systran_translationTestPage.transTextArea,15);
@@ -133,28 +143,40 @@ public class ChoosingServiceBySizeTranslationXLS {
                 }
 
 
-                System.out.println("cellW(" + i + "," + j + ")trans= " + translation[j]);
                 String cell2WContent = translation[j];
-                //cell2W[i][j]=cell2WContent;
-                //System.out.println("cell2W[i][j] = " + cell2W[i][j]);
 
                 //create a cell to write the translation into:
                 Cell cellW = rowW.createCell(j);
-                //assign a value to each cell[i,j]:
-                //cellW.setCellValue("row"+i+"cell"+j);
 
-                // Date, email and phone numbers no need to be translated: 5, 8, 10 : do nothing!
-                if(i>0&&(j==5)){
-                    cellW.setCellValue((cellR.toString().contains("-")) ? "-" : String.valueOf(cellR.getNumericCellValue()));
+                // Date, email and phone numbers no need to be translated: 4, 5, 6 : do nothing!
+                if(i>0 && j==0) {
+                    Double db = cellR.getNumericCellValue(); // having this line just before the last if, is a nightmare!
+                    cellW.setCellValue(db.longValue()+"");
+                }
+                else if(i>0 && (j==4||j==6)) { // the cell j==6 (email) has problem with Google
+                    // (lannyzg16019@qq.com --> Blue Girlfriend Zouguang 16019@QQ.com),
+                    // not with SYSTRAN (lannyzg16019@qq.com -->lannyzg16019@qq.com)
+                    // if a slower translation speed is tolerable,then with SYSTRAN,
+                    // no need todo anything extra for j==6
+                    cellW.setCellValue(cellRContent); // Date no to be translated.
+                } else  if(i>0 && (j==5)){ // for the cell j==5 (phone numbers),
+                    // reading in "1.5999018373E10" or "-" or "15-999-018373";
+                    // as phone number is a problem,  it should be as "15999018373" or "-".
+                    // do not try to get numbers when there is no numbers! (when there is only "-" )
+                        if(cellRContent.contains("-")&& cellRContent.length()==1){cellW.setCellValue("-");} // if "-" is the phone number, it should remain so.
+                        else if(cellRContent.length()>1 && cellRContent.contains("-")) { //15-999018373 has to be 15999018373
+                            // one has to remove "-" from the phone numbers, or it is not numeric
+                            cellRContent=cellRContent.replace("-","");
+                            cellW.setCellValue(cellRContent);
+                        }else{
+                            Double db = cellR.getNumericCellValue(); // having this line just before the last if, is a nightmare!
+                            cellW.setCellValue(db.longValue()+"");
+                        } // with db.longValue()+"", cellW= 15999018373; if db.longValue() only, then cellW=1.5999018373E10
                 }else {
                     cellW.setCellValue(cell2WContent);
                 }
 
-                if(i>0 && (j==4||j==6)) {
-                    cellW.setCellValue(cellR.toString());
-                } else {
-                    cellW.setCellValue(cell2WContent);
-                }
+                System.out.println("cellW(" + i + "," + j + ") = " + cellW);
 
             }// End of column j in row i:
 
