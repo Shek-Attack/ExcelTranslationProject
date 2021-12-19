@@ -78,7 +78,7 @@ public class ChoosingServiceBySizeGoogleSYSTRANSTranslationXLSX {
         System.out.println("colNums = " + colNums);
 
         // if the code does not run after one ROW, check the column number in the xls file
-        for (int i=0; i <=rowNums; i++) {
+        for (int i=10; i <=rowNums; i++) {
             String[] translation = new String[colNums];
             // get rows from the sheet
             XSSFRow rowR = sheetR.getRow(i); // for reading, just get the row
