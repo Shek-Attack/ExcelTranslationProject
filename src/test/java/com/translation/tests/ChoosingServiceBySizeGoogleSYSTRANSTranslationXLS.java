@@ -46,7 +46,6 @@ public class ChoosingServiceBySizeGoogleSYSTRANSTranslationXLS {
     //String sourceFile = "SourceSampleForTesting.xlsx"; // if the file is directly under the project
     private static final File transFile= new File("D:\\xlsx\\Nov15_2021\\Trans5.xls"); // write into
 
-
     // translate from
     static String source="chinese"; // can be any language supported by Google Translate
     // translate into
@@ -91,7 +90,6 @@ public class ChoosingServiceBySizeGoogleSYSTRANSTranslationXLS {
 
                 // get cell from the row
                 HSSFCell cellR = rowR.getCell(j);// read/get content from cell(j)
-
 
                 // column 5 reading should be different!!!!!!!!!!!
                 /**
